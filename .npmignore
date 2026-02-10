@@ -1,0 +1,33 @@
+# Source files (we only publish the compiled lib folder)
+src/
+tsconfig.json
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation build files
+docs/
+
+# Example apps
+example/
+examples/
