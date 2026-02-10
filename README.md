@@ -7,9 +7,10 @@ A customizable and smooth date picker dialog component for React Native (Expo) a
 - Smooth scroll experience with automatic centering
 - Customizable min/max date range
 - iOS-style picker interface
-- Beautiful gradient selection indicator
+- Customizable selection indicator background color
+- **Internationalization (i18n) support** - Built-in support for Chinese and English
 - TypeScript support
-- Works seamlessly with Expo projects
+- Works with both Expo and pure React Native projects
 
 ## Installation
 
@@ -28,7 +29,7 @@ yarn add rn-date-picker-dialog
 This package requires the following peer dependencies:
 
 ```bash
-npm install expo-linear-gradient react react-native
+npm install react react-native
 ```
 
 ## Usage
@@ -74,6 +75,11 @@ export default function App() {
 | `initialDate` | `Date` | No | `new Date()` | The initial date to display |
 | `minDate` | `Date` | No | `new Date(1945, 0, 1)` | The minimum selectable date |
 | `maxDate` | `Date` | No | `new Date()` (today) | The maximum selectable date |
+| `locale` | `'zh-CN' \| 'en-US'` | No | `'zh-CN'` | Locale for internationalization |
+| `confirmText` | `string` | No | - | Custom text for confirm button (overrides locale default) |
+| `cancelText` | `string` | No | - | Custom text for cancel button (overrides locale default) |
+| `selectionBackgroundColor` | `string` | No | `'#F0EDF8'` | Background color of the selection indicator |
+| `i18n` | `Partial<DatePickerI18n>` | No | - | Custom i18n configuration (advanced) |
 | `onConfirm` | `(date: Date) => void` | No | - | Callback when user confirms date selection |
 | `onCancel` | `() => void` | No | - | Callback when user cancels selection |
 | `onDismiss` | `() => void` | No | - | Callback when dialog is dismissed |
@@ -102,6 +108,93 @@ export default function App() {
   initialDate={new Date(2024, 0, 1)}
   minDate={new Date(2020, 0, 1)}
   maxDate={new Date(2025, 11, 31)}
+  onConfirm={(date) => {
+    console.log('Selected:', date);
+    setIsVisible(false);
+  }}
+  onCancel={() => setIsVisible(false)}
+  onDismiss={() => setIsVisible(false)}
+/>
+```
+
+### Internationalization (i18n)
+
+#### English Locale
+
+```tsx
+<DatePickerDialog
+  visible={isVisible}
+  locale="en-US"
+  onConfirm={(date) => {
+    console.log('Selected:', date);
+    setIsVisible(false);
+  }}
+  onCancel={() => setIsVisible(false)}
+  onDismiss={() => setIsVisible(false)}
+/>
+```
+
+**English format displays:**
+- Years: `2024`
+- Months: `Jan`, `Feb`, `Mar`, etc.
+- Days: `01`, `02`, `03`, etc.
+
+#### Chinese Locale (Default)
+
+```tsx
+<DatePickerDialog
+  visible={isVisible}
+  locale="zh-CN"  // This is the default, can be omitted
+  onConfirm={(date) => {
+    console.log('Selected:', date);
+    setIsVisible(false);
+  }}
+  onCancel={() => setIsVisible(false)}
+  onDismiss={() => setIsVisible(false)}
+/>
+```
+
+**Chinese format displays:**
+- Years: `2024年`
+- Months: `01月`, `02月`, etc.
+- Days: `01日`, `02日`, etc.
+
+#### Custom Button Text and Selection Color
+
+```tsx
+<DatePickerDialog
+  visible={isVisible}
+  locale="en-US"
+  confirmText="OK"
+  cancelText="Close"
+  selectionBackgroundColor="#E3F2FD"
+  onConfirm={(date) => {
+    console.log('Selected:', date);
+    setIsVisible(false);
+  }}
+  onCancel={() => setIsVisible(false)}
+  onDismiss={() => setIsVisible(false)}
+/>
+```
+
+#### Advanced: Custom i18n Configuration
+
+```tsx
+import { DatePickerDialog } from 'rn-date-picker-dialog';
+
+<DatePickerDialog
+  visible={isVisible}
+  locale="en-US"
+  i18n={{
+    yearSuffix: ' Year',
+    monthSuffix: ' Month',
+    daySuffix: ' Day',
+    // Or use custom month names
+    monthNames: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+  }}
   onConfirm={(date) => {
     console.log('Selected:', date);
     setIsVisible(false);

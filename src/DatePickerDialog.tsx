@@ -10,13 +10,18 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { type Locale, type DatePickerI18n, getI18nConfig } from './i18n';
 
 export interface DatePickerDialogProps {
   visible: boolean;
   initialDate?: Date;
   minDate?: Date;
   maxDate?: Date;
+  locale?: Locale;
+  confirmText?: string;
+  cancelText?: string;
+  selectionBackgroundColor?: string;
+  i18n?: Partial<DatePickerI18n>;
   onConfirm?: (date: Date) => void;
   onCancel?: () => void;
   onDismiss?: () => void;
@@ -38,10 +43,25 @@ export const DatePickerDialog: React.FC<DatePickerDialogProps> = ({
   initialDate,
   minDate = new Date(1945, 0, 1),
   maxDate,
+  locale = 'zh-CN',
+  confirmText,
+  cancelText,
+  selectionBackgroundColor = '#F0EDF8',
+  i18n: customI18n,
   onConfirm,
   onCancel,
   onDismiss,
 }) => {
+  // Get i18n configuration
+  const i18nConfig = useMemo(() => {
+    const baseConfig = getI18nConfig(locale);
+    return {
+      ...baseConfig,
+      ...customI18n,
+      confirm: confirmText || customI18n?.confirm || baseConfig.confirm,
+      cancel: cancelText || customI18n?.cancel || baseConfig.cancel,
+    };
+  }, [locale, confirmText, cancelText, customI18n]);
   // 确保 maxDate 是今天，且时间设为 0:0:0:0
   const today = useMemo(() => {
     const date = new Date();
@@ -724,31 +744,36 @@ export const DatePickerDialog: React.FC<DatePickerDialogProps> = ({
           {/* 顶部工具栏 */}
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={handleCancel} style={styles.toolbarButton}>
-              <Text style={styles.cancelText}>取消</Text>
+              <Text style={styles.cancelText}>{i18nConfig.cancel}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleConfirm} style={styles.toolbarButton}>
-              <Text style={styles.confirmText}>确认</Text>
+              <Text style={styles.confirmText}>{i18nConfig.confirm}</Text>
             </TouchableOpacity>
           </View>
 
           {/* 日期选择器 */}
           <View style={styles.pickerWrapper}>
-            {/* 中间选中指示器 - 渐变背景 */}
-            <View style={[styles.selectedIndicatorContainer, { top: 40 + ITEM_HEIGHT * 2 }]}>
-              <LinearGradient
-                colors={['#F4F1FB', '#E8E2F4']}
-                start={{ x: -0.966, y: -0.259 }}
-                end={{ x: 0.966, y: 0.259 }}
-                locations={[0.26, 0.83]}
-                style={styles.selectedIndicator}
-              />
-            </View>
+            {/* 中间选中指示器 */}
+            <View
+              style={[
+                styles.selectedIndicatorContainer,
+                {
+                  top: 40 + ITEM_HEIGHT * 2,
+                  backgroundColor: selectionBackgroundColor,
+                }
+              ]}
+            />
 
             {/* 三个滚动列 */}
             <View style={styles.pickerRow}>
-              {buildColumn('year', years, (value) => `${value}年`)}
-              {buildColumn('month', months, (value) => `${String(value).padStart(2, '0')}月`)}
-              {buildColumn('day', days, (value) => `${String(value).padStart(2, '0')}日`)}
+              {buildColumn('year', years, (value) => `${value}${i18nConfig.yearSuffix}`)}
+              {buildColumn('month', months, (value) => {
+                if (i18nConfig.monthNames && i18nConfig.monthNames.length === 12) {
+                  return i18nConfig.monthNames[value - 1];
+                }
+                return `${String(value).padStart(2, '0')}${i18nConfig.monthSuffix}`;
+              })}
+              {buildColumn('day', days, (value) => `${String(value).padStart(2, '0')}${i18nConfig.daySuffix}`)}
             </View>
           </View>
         </TouchableOpacity>
@@ -801,9 +826,6 @@ const styles = StyleSheet.create({
     left: 8,
     right: 8,
     height: ITEM_HEIGHT,
-  },
-  selectedIndicator: {
-    flex: 1,
     borderRadius: 10,
   },
   pickerRow: {
