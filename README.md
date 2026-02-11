@@ -78,6 +78,8 @@ export default function App() {
 | `locale` | `'zh-CN' \| 'en-US'` | No | `'zh-CN'` | Locale for internationalization |
 | `confirmText` | `string` | No | - | Custom text for confirm button (overrides locale default) |
 | `cancelText` | `string` | No | - | Custom text for cancel button (overrides locale default) |
+| `confirmTextColor` | `string` | No | `'#8066D0'` | Color for confirm button text |
+| `cancelTextColor` | `string` | No | `'#828897'` | Color for cancel button text |
 | `selectionBackgroundColor` | `string` | No | `'#F0EDF8'` | Background color of the selection indicator |
 | `i18n` | `Partial<DatePickerI18n>` | No | - | Custom i18n configuration (advanced) |
 | `onConfirm` | `(date: Date) => void` | No | - | Callback when user confirms date selection |
@@ -159,7 +161,7 @@ export default function App() {
 - Months: `01月`, `02月`, etc.
 - Days: `01日`, `02日`, etc.
 
-#### Custom Button Text and Selection Color
+#### Custom Button Text and Colors
 
 ```tsx
 <DatePickerDialog
@@ -167,6 +169,8 @@ export default function App() {
   locale="en-US"
   confirmText="OK"
   cancelText="Close"
+  confirmTextColor="#007AFF"
+  cancelTextColor="#999999"
   selectionBackgroundColor="#E3F2FD"
   onConfirm={(date) => {
     console.log('Selected:', date);

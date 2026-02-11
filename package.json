@@ -1,6 +1,6 @@
 {
   "name": "rn-date-picker-dialog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A customizable date picker dialog component for React Native (Expo) with smooth scroll experience",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

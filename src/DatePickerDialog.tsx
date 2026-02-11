@@ -20,6 +20,8 @@ export interface DatePickerDialogProps {
   locale?: Locale;
   confirmText?: string;
   cancelText?: string;
+  confirmTextColor?: string;
+  cancelTextColor?: string;
   selectionBackgroundColor?: string;
   i18n?: Partial<DatePickerI18n>;
   onConfirm?: (date: Date) => void;
@@ -46,6 +48,8 @@ export const DatePickerDialog: React.FC<DatePickerDialogProps> = ({
   locale = 'zh-CN',
   confirmText,
   cancelText,
+  confirmTextColor = '#8066D0',
+  cancelTextColor = '#828897',
   selectionBackgroundColor = '#F0EDF8',
   i18n: customI18n,
   onConfirm,
@@ -744,10 +748,10 @@ export const DatePickerDialog: React.FC<DatePickerDialogProps> = ({
           {/* 顶部工具栏 */}
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={handleCancel} style={styles.toolbarButton}>
-              <Text style={styles.cancelText}>{i18nConfig.cancel}</Text>
+              <Text style={[styles.cancelText, { color: cancelTextColor }]}>{i18nConfig.cancel}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleConfirm} style={styles.toolbarButton}>
-              <Text style={styles.confirmText}>{i18nConfig.confirm}</Text>
+              <Text style={[styles.confirmText, { color: confirmTextColor }]}>{i18nConfig.confirm}</Text>
             </TouchableOpacity>
           </View>
 
